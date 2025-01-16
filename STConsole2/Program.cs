@@ -1,4 +1,4 @@
 ﻿using STConsole2.Data;
 
 var db = new DbAccess();
-db.DbTest();
+db.DbSetup();
