@@ -7,6 +7,7 @@ using Spectre.Console;
 
 internal class DbAccess
 {
+    private readonly string connectionName = "DefaultConnection";
     private IConfiguration Configuration { get; }
     private string connectionString { get; set; }
 
@@ -17,14 +18,14 @@ internal class DbAccess
             .AddJsonFile("appsettings.json")
             .Build();
 
-        connectionString = Configuration.GetConnectionString("DefaultConnection");
+        connectionString = GetConnectionString;
     }
 
-    public void DbTest()
+    public void DbSetup()
     {
         AnsiConsole.Markup("[underline red]Welcome[/] [white]to Sugar Tracker Console[/]");
         AnsiConsole.WriteLine();
-        AnsiConsole.Markup("[blink red]Opening Connection[/]");
+        AnsiConsole.Markup("[red]Opening Connection[/]");
         AnsiConsole.WriteLine();
         using var conn = new SqlConnection(connectionString);
 
@@ -34,6 +35,8 @@ internal class DbAccess
             conn.Open();
         }
 
-        AnsiConsole.Markup("[blink red]Connected[/]");
+        AnsiConsole.Markup("[red]Connected[/]");
     }
+
+    private string? GetConnectionString => Configuration.GetConnectionString(connectionName);
 }
