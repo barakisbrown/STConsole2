@@ -2,6 +2,7 @@
 
 using STConsole2.Data;
 using STConsole2.Model;
+using STConsole2.Input;
 using Spectre.Console;
 
 internal static class Menu
@@ -28,7 +29,8 @@ internal static class Menu
                                     --------------------------------------
                                     
                             """;
-    private static readonly string ValidErrorMessage = "[bold]Must be between 0 and 7[/]";
+    private static readonly string MenuValidErrorMessage = "[bold]Must be between 0 and 7[/]";
+    
 
 
     internal static int GetMenuAndSelection()
@@ -43,8 +45,8 @@ internal static class Menu
             new TextPrompt<int>(MenuInputString)
             .Validate((n) => n switch
             {
-                > 7 => ValidationResult.Error(ValidErrorMessage),
-                < 0 => ValidationResult.Error(ValidErrorMessage),
+                > 7 => ValidationResult.Error(MenuValidErrorMessage),
+                < 0 => ValidationResult.Error(MenuValidErrorMessage),
                 >= 0 => ValidationResult.Success()
             }));
 
@@ -52,7 +54,42 @@ internal static class Menu
         return selection;
     }
 
-    internal static void Add() { }
-    internal static void Delete() { }
-    internal static void Update() { }
+    internal static void Add() 
+    {
+        // INSERT INTO READINGS(Amount,Added)
+        AnsiConsole.WriteLine("Adding a new reading to my tracker.");
+        // AMOUNT
+        var amount = Helper.GetAmount();
+        // DATE ADDED
+        var added = Helper.GetDate();       
+        // ECHO THE AMOUNT AND ADDED BACK TO THE USER
+        AnsiConsole.WriteLine($"You entered {amount} on the following date => {added}");
+        // Confirm to insert or decline to reset and do it again
+        if (Helper.YesNoPrompt())
+        {
+            // INSERT
+            var reading = new Reading()
+            {
+                Amount = amount,
+                Added = added
+            };
+
+            var data = new DbAccess();
+            bool success = data.InsertReading(reading);
+            if (success)
+            {
+                AnsiConsole.WriteLine("Succesfully added new reading.");
+            }
+            else
+            {
+                AnsiConsole.WriteLine("Error adding new reading.");
+            }
+        }        
+    }
+    internal static void Delete() 
+    { 
+    }
+    internal static void Update() 
+    { 
+    }
 }
