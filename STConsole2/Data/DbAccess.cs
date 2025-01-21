@@ -41,20 +41,17 @@ internal class DbAccess
     internal bool InsertReading(Reading reading)
     {
         bool success = false;
-        var sqlCmd = "Insert INTO READING(ID,@Amount,@Added) VALUES (@Amount,@Added);";
+        var sqlCmd = "Insert INTO READING (Amount,Added) VALUES (@Amount,@Added);";
         using var conn = new SqlConnection(connectionString);
         if (conn.State != System.Data.ConnectionState.Open)
         {
-            conn.Open();
-            using var cmd = conn.CreateCommand();
+            using var cmd = new SqlCommand(sqlCmd);
             cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = sqlCmd;
-            cmd.Parameters.Add("@Amount", System.Data.SqlDbType.SmallInt).Value = (Int16)reading.Amount;
-            cmd.Parameters.Add("@Added", System.Data.SqlDbType.Date).Value = reading.Added.ToDateTime(TimeOnly.MinValue);
-            cmd.Prepare();
-
+            cmd.Parameters.AddWithValue("@Amount", (Int16)reading.Amount);
+            cmd.Parameters.AddWithValue("@Added", reading.Added.ToDateTime(TimeOnly.MinValue));
+            cmd.Connection = conn;
+            conn.Open();
             success = cmd.ExecuteNonQuery() == 1;
-
         }
 
         return success;

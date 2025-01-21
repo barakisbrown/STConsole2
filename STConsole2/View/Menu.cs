@@ -7,6 +7,7 @@ using Spectre.Console;
 
 internal static class Menu
 {
+    private const int SleepAmount = 1000;
     private const string X = "Welcome to Sugar Tracker. Blood Sugar Tracker Application";
     private const string V = "Please Select (1-7) OR 0 to exit. :>";
     private static readonly string MenuInputString = V;
@@ -56,6 +57,7 @@ internal static class Menu
 
     internal static void Add() 
     {
+        AnsiConsole.Clear();
         // INSERT INTO READINGS(Amount,Added)
         AnsiConsole.WriteLine("Adding a new reading to my tracker.");
         // AMOUNT
@@ -78,11 +80,13 @@ internal static class Menu
             bool success = data.InsertReading(reading);
             if (success)
             {
-                AnsiConsole.WriteLine("Succesfully added new reading.");
+                AnsiConsole.WriteLine("[bold]Succesfully added new reading.[/]");
+                Thread.Sleep(SleepAmount);
             }
             else
             {
-                AnsiConsole.WriteLine("Error adding new reading.");
+                AnsiConsole.WriteLine("[red]Error adding new reading.[/]");
+                Thread.Sleep(SleepAmount);
             }
         }        
     }
