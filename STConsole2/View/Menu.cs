@@ -104,6 +104,34 @@ internal static class Menu
     internal static void ShowAll()
     {
         // SHOW ALL READINGS FROM THE DATABASE
+        // ADD DATA TO TABLE
+        var data = new DbAccess();
+        // THIS USES DUMMY DATA SO I CAN SEE WHAT THE DATA LOOKS LIKE
+        var list = data.GetDummyData();
+        // DISPLAY TABLE
+        var table = new Table();
+        table.Title = new TableTitle("[bold]MY GLUCOSE READING CHART[/]");
+        table.AddColumn("RECORD");
+        table.AddColumn("GLUCOSE READING");
+        table.AddColumn("Date Entered");
+        table.Border(TableBorder.Rounded);
+        table.Expand();
+        table.Columns[0].Centered();
+        table.Columns[1].Centered();
+        table.Columns[2].Centered();
 
+        foreach(var reading in list)
+        {
+            table.AddRow(reading.ID.ToString(), reading.Amount.ToString(), reading.Added.ToString());
+        }
+
+        AnsiConsole.Clear();
+        AnsiConsole.WriteLine();
+        AnsiConsole.WriteLine();
+        AnsiConsole.WriteLine();
+        // RENDER TABLE
+        AnsiConsole.Write(table);
+        AnsiConsole.WriteLine();
+        Thread.Sleep(SleepAmount * 3);
     }
 }
