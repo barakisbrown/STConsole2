@@ -92,8 +92,18 @@ internal static class Menu
     }
     internal static void Delete() 
     { 
+        // DELETE 1 RECORD FROM READING
     }
+    
     internal static void Update() 
     { 
+        // DETERMINE WHICH PART OF THE READING I NEED TO UPDATE 
+        // EITHER AMOUNT OR ADDED OR BOTH
+    }
+
+    internal static void ShowAll()
+    {
+        // SHOW ALL READINGS FROM THE DATABASE
+
     }
 }
