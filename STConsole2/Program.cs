@@ -16,7 +16,7 @@ while(choice != 0)
         case 0:
             break;
         case 1:
-            AnsiConsole.Markup(notAvailYet);
+            Menu.ShowAll();
             break;
         case 2:
             Menu.Add();
