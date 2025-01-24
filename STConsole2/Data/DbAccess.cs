@@ -157,7 +157,7 @@ internal class DbAccess
         return success;
     }
 
-    List<Reading> GetDummyData()
+    internal List<Reading> GetDummyData()
     {
         var data = new List<Reading>();
 
