@@ -157,7 +157,28 @@ internal class DbAccess
         return success;
     }
 
+    List<Reading> GetDummyData()
+    {
+        var data = new List<Reading>();
 
+        int[] Amounts = new[] { 80, 220, 100, 130, 150 };
+        string[] Added = new[] { "01/20/2025", "01/21/2025", "01/22/2025", "01/23/2025", "01/24/2025" };
+        
+
+        for(int recordNumber = 0; recordNumber < 5; recordNumber++)
+        {
+            var reading = new Reading()
+            {
+                ID = recordNumber,
+                Amount = Amounts[recordNumber],
+                Added = DateOnly.Parse(Added[recordNumber])
+            };
+
+            data.Add(reading);
+        }
+
+        return data;
+    }
 
     private string? GetConnectionString => Configuration.GetConnectionString(connectionName);
 }
