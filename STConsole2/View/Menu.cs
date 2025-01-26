@@ -9,7 +9,7 @@ internal static class Menu
 {
     private const int SleepAmount = 1000;
     private const string X = "Welcome to Sugar Tracker. Blood Sugar Tracker Application";
-    private const string V = "Please Select (1-7) OR 0 to exit. :>";
+    private const string V = "Please Select (1-6) OR 0 to exit. :>";
     private static readonly string MenuInputString = V;
     private static readonly string AppNameString = X;
     private static readonly string menu = """
@@ -20,17 +20,16 @@ internal static class Menu
                                     What would you like to do?
                                     ---------------------------------------
                                     Type 0 to Close Sugar Tracker App.
-                                    Type 1 to View All Readings.
+                                    Type 1 to View All Readings
                                     Type 2 to Add Reading
                                     Type 3 to Delete Reading
                                     Type 4 to Update Reading
-                                    Type 5 to Show Lifetime Report
-                                    Type 6 to Show 30/60/90 Day Report
-                                    Type 7 to write reading to a csv file
+                                    Type 5 to Show 30/60/90 Day Report
+                                    Type 6 to write reading to a csv file
                                     --------------------------------------
                                     
                             """;
-    private static readonly string MenuValidErrorMessage = "[bold]Must be between 0 and 7[/]";
+    private static readonly string MenuValidErrorMessage = "[bold]Must be between 0 and 6[/]";
     
 
 
@@ -46,7 +45,7 @@ internal static class Menu
             new TextPrompt<int>(MenuInputString)
             .Validate((n) => n switch
             {
-                > 7 => ValidationResult.Error(MenuValidErrorMessage),
+                > 6 => ValidationResult.Error(MenuValidErrorMessage),
                 < 0 => ValidationResult.Error(MenuValidErrorMessage),
                 >= 0 => ValidationResult.Success()
             }));
@@ -103,13 +102,14 @@ internal static class Menu
 
     internal static void ShowAll()
     {
+        int recordCount = 1;
         // SHOW ALL READINGS FROM THE DATABASE
         // ADD DATA TO TABLE
         var data = new DbAccess();
-        // THIS USES DUMMY DATA SO I CAN SEE WHAT THE DATA LOOKS LIKE
-        var list = data.GetDummyData();
+        // Actual DB Data to be displayed
+        var list = data.GetAll();
         // DISPLAY TABLE
-        var table = new Table();
+        Table table = new();
         table.Title = new TableTitle("[bold]MY GLUCOSE READING CHART[/]");
         table.AddColumn("RECORD");
         table.AddColumn("GLUCOSE READING");
@@ -122,7 +122,7 @@ internal static class Menu
 
         foreach(var reading in list)
         {
-            table.AddRow(reading.ID.ToString(), reading.Amount.ToString(), reading.Added.ToString());
+            table.AddRow(recordCount++.ToString(), reading.Amount.ToString(), reading.Added.ToString());
         }
 
         AnsiConsole.Clear();
@@ -133,5 +133,12 @@ internal static class Menu
         AnsiConsole.Write(table);
         AnsiConsole.WriteLine();
         Thread.Sleep(SleepAmount * 3);
+    }
+
+    internal static void Show306090Report()
+    {
+        
+
+
     }
 }
