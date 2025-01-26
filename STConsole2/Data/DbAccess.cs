@@ -14,6 +14,8 @@ internal class DbAccess
     private readonly string updateAmountSqlCmd = "UPDATE READING SET Amount = @Amount WHERE ID = @ID;";
     private readonly string updateDateSqlCmd = "UPDATE READING SET Added = @Added WHERE ID = @ID;";
     private readonly string updateAllSqlCmd = "UPDATE READING SET Amount = @Amount,Added = @Added WHERE ID = @ID";
+    private readonly string over200SqlCmd = "SELECT Count(Amount) AS OVR200 FROM READING WHERE Amount > 200;";
+    private readonly string getStatsSqlCmd = "SELECT TOP (1000) [Count],[Max],[Min],[Average] FROM READING_STATS";
     private IConfiguration Configuration { get; }
     private string ConnectionString { get; set; }
 
@@ -156,6 +158,40 @@ internal class DbAccess
         }
 
         return success;
+    }
+
+    private int GetOver200Amount()
+    {
+        int countOver200 = 0;
+        using var conn = new SqlConnection(ConnectionString);
+        if (conn.State != System.Data.ConnectionState.Open)
+        {
+            conn.Open();
+            using var cmd = new SqlCommand(over200SqlCmd, conn);
+            countOver200 = (int)cmd.ExecuteScalar();
+        }
+        return countOver200;
+    }
+
+    internal ReportData GetStats()
+    {
+        var report = new ReportData();
+
+        using var conn = new SqlConnection(ConnectionString);
+        using var cmd = new SqlCommand(getStatsSqlCmd, conn);
+        conn.Open();
+        // FETCH RESULTS HERE
+        using SqlDataReader reader = cmd.ExecuteReader();
+        if (reader.Read())
+        {
+            report.Count = reader.GetInt32(0);
+            report.Max = reader.GetInt32(1);
+            report.MIN = reader.GetInt32(2);
+            report.AVG = reader.GetInt32(3);
+            report.Over200 = GetOver200Amount();
+        }
+
+        return report;
     }
 
     internal List<Reading> GetDummyData()
