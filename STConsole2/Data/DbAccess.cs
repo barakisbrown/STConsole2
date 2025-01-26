@@ -48,8 +48,9 @@ internal class DbAccess
     {
         var list = new List<Reading>();
         using var conn = new SqlConnection(ConnectionString);
-        if (conn.State == System.Data.ConnectionState.Open)
+        if (conn.State != System.Data.ConnectionState.Open)
         {
+            conn.Open();
             using var cmd = new SqlCommand(getAllSqlCmd);
             cmd.Connection = conn;
             SqlDataReader reader = cmd.ExecuteReader();
@@ -58,7 +59,7 @@ internal class DbAccess
                 Reading reading = new()
                 {
                     ID = reader.GetInt32(0),
-                    Amount = reader.GetInt32(1),
+                    Amount = reader.GetInt16(1),
                     Added = DateOnly.FromDateTime(reader.GetDateTime(2))
                 };
                 list.Add(reading);
