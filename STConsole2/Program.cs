@@ -26,9 +26,8 @@ while(choice != 0)
             break;
         case 4:
             Menu.Update(); break;
-        case 5:
+        case 5:       
         case 6:
-        case 7:
             AnsiConsole.Markup(notAvailYet);
             break;
     }
